@@ -79,19 +79,22 @@ function Cargar_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[nombre direc]=uigetfile('*.jpg','Abrir Imagen');
+[nombre direc]=uigetfile('*.*','Abrir Imagen');
 if nombre == 0
     return
 end
-I=imread(fullfile(direc,nombre));
-imshow(I);
-
+esqueje=imread(fullfile(direc,nombre));
+imshow(esqueje);
+set(handles.alinear, 'UserData', esqueje);%guardamos la imagen en el componente
 
 % --- Executes on button press in alinear.
 function alinear_Callback(hObject, eventdata, handles)
 % hObject    handle to alinear (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+esqueje = get(handles.alinear, 'UserData');%obtenemos la imagen guardadas
+esqueje = binarizar(esqueje);
+imshow(esqueje);
 
 
 
