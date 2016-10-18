@@ -22,7 +22,7 @@ function varargout = Gui(varargin)
 
 % Edit the above text to modify the response to help Gui
 
-% Last Modified by GUIDE v2.5 14-Oct-2016 12:02:04
+% Last Modified by GUIDE v2.5 17-Oct-2016 23:35:28
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -60,6 +60,11 @@ guidata(hObject, handles);
 
 % UIWAIT makes Gui wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
+axes(handles.pantalla); % Establece el eje como actual 
+set(gca, 'Box', 'on'); % Se encierran los ejes en una caja 
+set(gca, 'XTick', [], 'YTick', []) % No muestra las marcas de la señal de los ejes 
+
+
 
 
 % --- Outputs from this function are returned to the command line.
@@ -79,13 +84,18 @@ function Cargar_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[nombre direc]=uigetfile('*.jpg','Abrir Imagen');
+[nombre,direc]=uigetfile('*.*','Abrir Imagen');
 if nombre == 0
     return
 end
+
 I=imread(fullfile(direc,nombre));
 imshow(I);
+esqueje=imread(fullfile(direc,nombre));
+imshow(esqueje);
+set(handles.alinear, 'UserData', esqueje);%guardamos la imagen en el componente
 set(handles.alinear,'enable','on');
+set(handles.restaurar,'enable','on');
 
 
 % --- Executes on button press in alinear.
@@ -93,7 +103,9 @@ function alinear_Callback(hObject, eventdata, handles)
 % hObject    handle to alinear (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
+esqueje = get(handles.alinear, 'UserData');%obtenemos la imagen guardadas
+esqueje = binarizar(esqueje);
+imshow(esqueje);
 
 
 function maxLargo_Callback(hObject, eventdata, handles)
@@ -103,6 +115,8 @@ function maxLargo_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of maxLargo as text
 %        str2double(get(hObject,'String')) returns contents of maxLargo as a double
+global maxLargo;
+maxLargo = str2double(get(hObject,'String'));
 
 
 % --- Executes during object creation, after setting all properties.
@@ -119,6 +133,7 @@ end
 
 
 
+
 function largoMin_Callback(hObject, eventdata, handles)
 % hObject    handle to largoMin (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -126,7 +141,8 @@ function largoMin_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of largoMin as text
 %        str2double(get(hObject,'String')) returns contents of largoMin as a double
-
+global largoMin;
+largoMin = str2double(get(hObject,'String'));
 
 % --- Executes during object creation, after setting all properties.
 function largoMin_CreateFcn(hObject, eventdata, handles)
@@ -149,7 +165,8 @@ function primeraHoja_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of primeraHoja as text
 %        str2double(get(hObject,'String')) returns contents of primeraHoja as a double
-
+global distancia;
+distancia= str2double(get(hObject,'String'));
 
 % --- Executes during object creation, after setting all properties.
 function primeraHoja_CreateFcn(hObject, eventdata, handles)
@@ -162,3 +179,17 @@ function primeraHoja_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in restaurar.
+function restaurar_Callback(hObject, eventdata, handles)
+% hObject    handle to restaurar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+set(handles.maxLargo,'string','');
+set(handles.largoMin,'string','');
+set(handles.primeraHoja,'string','');
+axes(handles.pantalla);
+cla reset;
+set(gca, 'Box', 'on'); % Se encierran los ejes en una caja 
+set(gca, 'XTick', [], 'YTick', []) % No muestra las marcas de la señal de los ejes 
