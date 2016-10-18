@@ -85,6 +85,7 @@ if nombre == 0
 end
 I=imread(fullfile(direc,nombre));
 imshow(I);
+set(handles.alinear,'enable','on');
 
 
 % --- Executes on button press in alinear.
