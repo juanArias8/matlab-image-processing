@@ -107,28 +107,22 @@ esqueje = get(handles.alinear, 'UserData');%obtenemos la imagen guardadas
 esqueje = binarizar(esqueje);
 imshow(esqueje);
 
-imwrite(esqueje,'esquejeBw.jpg');
-
-
 bw = im2bw(esqueje);
 figure(1); imshow(bw);
 
 [l ne] = bwlabel(bw);
 propied = regionprops(l);
 hold on
-s = find([propied.Area]<2500);
+s = find([propied.Area]<1500);
 for n=1:size(s,2)
     d = round(propied(s(n)).BoundingBox);
     bw(d(2):d(2)+d(4),d(1):d(1)+d(3)) = 0;
 end
 figure(2); imshow(bw);
-
+imwrite(bw,'esquejeBw3.bmp');
 bw2 = bw;
 prop = regionprops(bw2,'Orientation')
 x = prop.Orientation
-if x < 0
-    x = abs(x)
-end
 bw3 = imrotate(bw2, -x);
 figure(3);
 subplot 121; imshow(bw2); title('Original');
