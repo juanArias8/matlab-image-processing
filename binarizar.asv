@@ -33,9 +33,8 @@ function [ esquejeBin ] = binarizar( esqueje )
     %rellena todo el interior del lunar
     %d=imfill(d);
         %figure(6);imshow(d);impixelinfo
-    d = bwareaopen(d,3000);
+    d = bwareaopen(d,10000);
     esquejeBin = d; %retornamos imagen binarizada
-     figure(60);imshow(d);impixelinfo
     %Despues de esto, haremos un marco de la imagen inicial, como ya sabemos en
     %que parte se ubica el lunar, simplemente lo de afuera lo dejaremos en
     %negro y con esto tendremos un lunar.
