@@ -37,12 +37,12 @@ function [ esquejeBin ] = binarizar( esqueje )
     %Despues de esto, haremos un marco de la imagen inicial, como ya sabemos en
     %que parte se ubica el lunar, simplemente lo de afuera lo dejaremos en
     %negro y con esto tendremos un lunar.
-%para mostrar el esqueje recortado o con cuadro
-     d=[d,d,d];
-     [fil,col,cap]=size(a);
-     d=reshape(d,[fil,col,cap]);
-    a(d==0)=0;
-     esquejeBin = a;
+% % para mostrar el esqueje recortado o con cuadro
+%      d=[d,d,d];
+%      [fil,col,cap]=size(a);
+%      d=reshape(d,[fil,col,cap]);
+%     a(d==0)=0;
+%      esquejeBin = a;
     
 end
 

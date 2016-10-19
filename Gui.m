@@ -22,7 +22,7 @@ function varargout = Gui(varargin)
 
 % Edit the above text to modify the response to help Gui
 
-% Last Modified by GUIDE v2.5 17-Oct-2016 23:35:28
+% Last Modified by GUIDE v2.5 18-Oct-2016 19:18:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -107,6 +107,33 @@ esqueje = get(handles.alinear, 'UserData');%obtenemos la imagen guardadas
 esqueje = binarizar(esqueje);
 imshow(esqueje);
 
+imwrite(esqueje,'esquejeBw.jpg');
+
+
+bw = im2bw(esqueje);
+figure(1); imshow(bw);
+
+[l ne] = bwlabel(bw);
+propied = regionprops(l);
+hold on
+s = find([propied.Area]<2500);
+for n=1:size(s,2)
+    d = round(propied(s(n)).BoundingBox);
+    bw(d(2):d(2)+d(4),d(1):d(1)+d(3)) = 0;
+end
+figure(2); imshow(bw);
+
+bw2 = bw;
+prop = regionprops(bw2,'Orientation')
+x = prop.Orientation
+if x < 0
+    x = abs(x)
+end
+bw3 = imrotate(bw2, -x);
+figure(3);
+subplot 121; imshow(bw2); title('Original');
+subplot 122; imshow(bw3); title('Alineada');
+
 
 function maxLargo_Callback(hObject, eventdata, handles)
 % hObject    handle to maxLargo (see GCBO)
@@ -117,6 +144,10 @@ function maxLargo_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of maxLargo as a double
 global maxLargo;
 maxLargo = str2double(get(hObject,'String'));
+if isnan(maxLargo)
+    msgbox('el valor ingresado debe ser numérico');
+end
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -143,6 +174,9 @@ function largoMin_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of largoMin as a double
 global largoMin;
 largoMin = str2double(get(hObject,'String'));
+if isnan(largoMin)
+    msgbox('el valor ingresado debe ser numérico');
+end
 
 % --- Executes during object creation, after setting all properties.
 function largoMin_CreateFcn(hObject, eventdata, handles)
@@ -167,6 +201,9 @@ function primeraHoja_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of primeraHoja as a double
 global distancia;
 distancia= str2double(get(hObject,'String'));
+if isnan(distancia)
+    msgbox('el valor ingresado debe ser numérico');
+end
 
 % --- Executes during object creation, after setting all properties.
 function primeraHoja_CreateFcn(hObject, eventdata, handles)
@@ -193,3 +230,37 @@ axes(handles.pantalla);
 cla reset;
 set(gca, 'Box', 'on'); % Se encierran los ejes en una caja 
 set(gca, 'XTick', [], 'YTick', []) % No muestra las marcas de la señal de los ejes 
+global maxLargo; maxLargo = 0;
+global largoMin; largoMin = 0;
+global distancia; distancia = 0;
+clear all; clc
+
+
+
+function edit7_Callback(hObject, eventdata, handles)
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit7 as text
+%        str2double(get(hObject,'String')) returns contents of edit7 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in pushbutton4.
+function pushbutton4_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
