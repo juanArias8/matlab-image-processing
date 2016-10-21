@@ -150,12 +150,7 @@ pc = prop.Centroid
 plot(pc(1),pc(2),'*','MarkerSize',10,'LineWidth',2);
 
 hold on
-<<<<<<< HEAD
-s = find([propied.Area]<500);
-for n=1:size(s,2)
-    d = round(propied(s(n)).BoundingBox);
-    bw(d(2):d(2)+d(4),d(1):d(1)+d(3)) = 0;
-=======
+
 % P1=[pe(8,1) pe(8,2)];P2=[pc(1) pc(2)];
 % plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',2)
 P1=[pe(6,1) pe(6,2)];P2=[pc(1) pc(2)];
@@ -186,11 +181,14 @@ if v2(2)>0
     bw2 = imrotate(bw, -a2(7));
 else
      bw2 = imrotate(bw, a2(7));
->>>>>>> origin/master
+
 end
-figure(2);
-subplot 121; imshow(bw); title('Original');
-subplot 122; imshow(bw2); title('Alineada');
+% figure(2);
+% subplot 121; imshow(bw); title('Original');
+% subplot 122; imshow(bw2); title('Alineada');
+
+ima1 = imrotate(bw,180);
+imwrite(ima1,'ima9.bmp');
 
 
 
