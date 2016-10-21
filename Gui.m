@@ -113,7 +113,7 @@ bw = im2bw(esqueje);
 [l ne] = bwlabel(bw);
 propied = regionprops(l);
 hold on
-s = find([propied.Area]<1500);
+s = find([propied.Area]<500);
 for n=1:size(s,2)
     d = round(propied(s(n)).BoundingBox);
     bw(d(2):d(2)+d(4),d(1):d(1)+d(3)) = 0;

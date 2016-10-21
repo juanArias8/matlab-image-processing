@@ -1,4 +1,4 @@
-bw1 = imread('esquejeBw2.bmp');
+bw1 = imread('esquejeBw3.bmp');
 figure(1); 
 subplot 121; imshow(bw1);
 bw = im2bw(bw1);
@@ -10,12 +10,11 @@ hold on
 pe = prop.Extrema
 p1 = pe(1,1)
 p5 = pe(5,1)
-if (p1 < 700) && (p5 < 700)
+if (p1 > 700) && (p5 > 700)
     bw = imrotate(bw,180);
     hold on
     imshow(bw);
 end
-
 prop= regionprops(bw,'all');
 N = length(prop);
 
@@ -42,7 +41,6 @@ recta = plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',2)
 hold on
 po = prop.Orientation
 bw2 = imrotate(bw,-po);
-figure(2); imshow(bw2);
 % figure(2);
 % subplot 121; imshow(bw); title('Original');
 % subplot 122; imshow(bw2); title('Alineada');
