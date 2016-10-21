@@ -23,11 +23,7 @@ function [ esquejeBin ] = binarizar( esqueje )
  
      %%---Con los 4 pasos siguientes podemos sacar el perimetro del lunar para
      %%saber cual es el limite
-     ee=strel('disk',3);
-     e=imerode(d,ee);
-     f=d-e;
-         %figure(6);imshow(f);
-     [l,n]=bwlabel(f);
+     d = bwareaopen(d,40000);
  
      %El paso anterior se puede omitir utilizando la funcion fill, esta nos
      %rellena todo el interior del lunar
