@@ -8,7 +8,7 @@ function [ esquejeBin ] = binarizar( esqueje )
          %figure(2);imshow(c);impixelinfo
      %%Luego de obtener la imagen de interes, declaramos un umbral y lo
      %%realizamos
-     c(c>200)=255;c(c<255)=0;
+     c(c>140)=255;c(c<255)=0;
          %figure(3);imshow(c);
      %Definimos un elementio estructurante y con esto hacemos erode
      ee=strel('disk',6);
@@ -23,11 +23,7 @@ function [ esquejeBin ] = binarizar( esqueje )
  
      %%---Con los 4 pasos siguientes podemos sacar el perimetro del lunar para
      %%saber cual es el limite
-     ee=strel('disk',3);
-     e=imerode(d,ee);
-     f=d-e;
-         %figure(6);imshow(f);
-     [l,n]=bwlabel(f);
+     d = bwareaopen(d,40000);
  
      %El paso anterior se puede omitir utilizando la funcion fill, esta nos
      %rellena todo el interior del lunar
@@ -38,10 +34,10 @@ function [ esquejeBin ] = binarizar( esqueje )
      %que parte se ubica el lunar, simplemente lo de afuera lo dejaremos en
      %negro y con esto tendremos un lunar.
  %para mostrar el esqueje recortado o con cuadro
-     d=[d,d,d];
-     [fil,col,cap]=size(a);
-     d=reshape(d,[fil,col,cap]);
-     a(d==0)=0;
-     esquejeBin = a;
+%      d=[d,d,d];
+%      [fil,col,cap]=size(a);
+%      d=reshape(d,[fil,col,cap]);
+%      a(d==0)=0;
+%      esquejeBin = a;
      
 end
