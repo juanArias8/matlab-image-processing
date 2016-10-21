@@ -108,7 +108,7 @@ esqueje = binarizar(esqueje);
 imshow(esqueje);
 
 bw = im2bw(esqueje);
-figure(1); imshow(bw);
+% figure(1); imshow(bw);
 
 [l ne] = bwlabel(bw);
 propied = regionprops(l);
@@ -118,15 +118,15 @@ for n=1:size(s,2)
     d = round(propied(s(n)).BoundingBox);
     bw(d(2):d(2)+d(4),d(1):d(1)+d(3)) = 0;
 end
-figure(2); imshow(bw);
+% figure(2); imshow(bw);
 imwrite(bw,'esquejeBw3.bmp');
 bw2 = bw;
 prop = regionprops(bw2,'Orientation')
 x = prop.Orientation
 bw3 = imrotate(bw2, -x);
-figure(3);
-subplot 121; imshow(bw2); title('Original');
-subplot 122; imshow(bw3); title('Alineada');
+% figure(3);
+% subplot 121; imshow(bw2); title('Original');
+% subplot 122; imshow(bw3); title('Alineada');
 
 
 function maxLargo_Callback(hObject, eventdata, handles)
