@@ -104,7 +104,7 @@ function alinear_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 esqueje = get(handles.alinear, 'UserData');%obtenemos la imagen guardadas
-bw1 = binarizar(esqueje);
+[bwT,bw1] = binarizar(esqueje);
     subplot 121; imshow(bw1);
     bw = im2bw(bw1);
     subplot 122;imshow(bw);
@@ -122,7 +122,7 @@ bw1 = binarizar(esqueje);
    
     imshow(bw);
 
-    bw = bwareaopen(bw,1000);
+
 
 %extree los datos de la imagen binaria
 prop = regionprops(bw,'all');
@@ -151,13 +151,6 @@ plot(pc(1),pc(2),'*','MarkerSize',10,'LineWidth',2);
 
 hold on
 
-% s = find([propied.area]<500);
-% for n=1:size(s,2)
-%     d = round(propied(s(n)).BoundingBox);
-%     bw(d(2):d(2)+d(4),d(1):d(1)+d(3)) = 0;
-% end
-% P1=[pe(8,1) pe(8,2)];P2=[pc(1) pc(2)];
-% plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',2)
 P1=[pe(6,1) pe(6,2)];P2=[pc(1) pc(2)];
 plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',2)
 P1=[pe(4,1) pe(4,2)];P2=[pc(1) pc(2)];
@@ -165,15 +158,20 @@ plot([P1(1) P2(1)],[P1(2) P2(2)],'g','LineWidth',2)
 P1=[pe(2,1) pe(2,2)];P2=[pc(1) pc(2)];
 plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
 %creando lineas de eje x
-[m,n] = size(esqueje);
-P1=[0 pc(2)];P2=[m pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
-pause(1)
-%creando lineas de eje y
-P1=[pc(1) 0];P2=[pc(1) n];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
-pause(1)
- 
+[fil,col] = size(bw);
+% P1=[0 pc(2)];P2=[m pc(2)];
+% plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
+% 
+% %creando lineas de eje y
+% P1=[pc(1) 0];P2=[pc(1) n];
+% plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
+
+P3=[0,pc(2)]; P4=[col,pc(2)];
+rectax = plot([P3(1) P4(1)],[P3(2) P4(2)],'r','LineWidth',1);
+
+P1=[pc(1),0]; P2=[pc(1),fil];
+rectay = plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',1);
+
 hold on
 v1 = [pe(4,1)-pc(1) 0 0]
 v2 = [pe(4,1)-pc(1) -(pe(4,2)-pc(2)) 0] 
@@ -188,7 +186,8 @@ else
      bw2 = imrotate(bw, a2(7));
 
 end
-subplot 121; imshow(bw); title('Original');
+figure(80)
+subplot 121; imshow(bwT); title('Original');
 subplot 122; imshow(bw2); title('Alineada');
 %ahora a sacar ancho y largo
     figure(29); 
@@ -227,16 +226,16 @@ P1=[pe(4,1) pe(4,2)];P2=[pc(1) pc(2)];
 plot([P1(1) P2(1)],[P1(2) P2(2)],'g','LineWidth',2)
 P1=[pe(2,1) pe(2,2)];P2=[pc(1) pc(2)];
 plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
+[m,n] = size(bw);
 %creando lineas de eje x
 
 P1=[0 pc(2)];P2=[m pc(2)];
 plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
-pause(1)
+
 %creando lineas de eje y
 P1=[pc(1) 0];P2=[pc(1) n];
 plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
-pause(1)
- 
+
 hold on
 v1 = [pe(4,1)-pc(1) 0 0]
 v2 = [pe(4,1)-pc(1) -(pe(4,2)-pc(2)) 0] 
@@ -265,7 +264,7 @@ figure(1);
 subplot 122; plot(vec);
 
 %Guardamos en sv el tamaño del vector
-sv = size(vec)
+sv = size(vec);
 
 %%%%%%%%%%%%%%%%%% HALLAMOS LOS PUNTOS INICIALES DEL TALLO %%%%%%%%%%%%%%%%
 %Guardamos en x la columna donde inicia el esqueje (inicio del tallo)
