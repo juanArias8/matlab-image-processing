@@ -121,6 +121,8 @@ esqueje = get(handles.alinear, 'UserData');%obtenemos la imagen guardadas
     end
    
     imshow(bw);
+    bw = imrotate(bw,180);
+    imwrite(bw,'ima9.bmp');
 
 
 
