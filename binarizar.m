@@ -8,6 +8,9 @@ function [ talloBin , esquejeBin ] = binarizar( esqueje )
          %figure(2);imshow(c);impixelinfo
      %%Luego de obtener la imagen de interes, declaramos un umbral y lo
      %%realizamos
+     cAnterior = c;
+     c(c>140)=255;c(c<255)=0;     
+     c = eliminaCeldasB(c,cAnterior);
      c(c>140)=255;c(c<255)=0;
          %figure(3);imshow(c);
      %Definimos un elementio estructurante y con esto hacemos erode
