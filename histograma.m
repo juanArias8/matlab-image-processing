@@ -1,4 +1,4 @@
-bw = imread('ima9.bmp');
+bw = imread('ima3.bmp');
 %bw= imrotate(bw,180);
 %Hallamos el número de filas y colúmnas de la imagen
 
@@ -18,7 +18,6 @@ figure(1);
 subplot 122; plot(vec);
 subplot 121; imshow(bw); impixelinfo
 hold on
-
 %Guardamos en sv el tamaño del vector
 sv = size(vec);
 
@@ -64,7 +63,6 @@ for i=(y1+100):fil
     end
 end
 hold on
-imshow(bw);impixelinfo
 
 % %%%%%%%%%%%%%%%%%%% HALLAMOS LOS PUNTOS INICIALES DE LA HOJA %%%%%%%%%%%%
 
@@ -119,13 +117,13 @@ y1 = y1 + centroh;
 %Punto inicial del tallo
 hold on
 P1=[x,0]; P2=[x,fil];
-recta1 = plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',1);
+plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',1);
 P3=[0,y]; P4=[col,y];
-recta2 = plot([P3(1) P4(1)],[P3(2) P4(2)],'r','LineWidth',1);
+plot([P3(1) P4(1)],[P3(2) P4(2)],'r','LineWidth',1);
 
 %Punto inicial de la primer hoja
 hold on
 P5=[x1,0]; P6=[x1,fil];
-recta3 = plot([P5(1) P6(1)],[P5(2) P6(2)],'m','LineWidth',1);
+plot([P5(1) P6(1)],[P5(2) P6(2)],'m','LineWidth',1);
 P7=[0,y1]; P8=[col,y1];
-recta4 = plot([P7(1) P8(1)],[P7(2) P8(2)],'m','LineWidth',1);
+plot([P7(1) P8(1)],[P7(2) P8(2)],'m','LineWidth',1);
