@@ -1,4 +1,5 @@
-bw = imread('ima3.bmp');
+function [ x,y,x1,y1 ] = hojaBase( imagen )
+bw = imagen;
 %bw= imrotate(bw,180);
 %Hallamos el número de filas y colúmnas de la imagen
 
@@ -127,3 +128,5 @@ P5=[x1,0]; P6=[x1,fil];
 plot([P5(1) P6(1)],[P5(2) P6(2)],'m','LineWidth',1);
 P7=[0,y1]; P8=[col,y1];
 plot([P7(1) P8(1)],[P7(2) P8(2)],'m','LineWidth',1);
+end
+

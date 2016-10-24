@@ -72,6 +72,10 @@ set(ha,'handlevisibility','off', ...
 % uiwait(handles.figure1);
 axes(handles.pantalla); % Establece el eje como actual 
 set(gca, 'Box', 'on'); % Se encierran los ejes en una caja 
+set(gca, 'XTick', [], 'YTick', []) % No muestra las marcas de la señal de los ejes
+
+axes(handles.modificado); % Establece el eje como actual 
+set(gca, 'Box', 'on'); % Se encierran los ejes en una caja 
 set(gca, 'XTick', [], 'YTick', []) % No muestra las marcas de la señal de los ejes 
 
 
@@ -96,11 +100,10 @@ function Cargar_Callback(hObject, eventdata, handles)
 if nombre == 0
     return
 end
-
+axes(handles.pantalla);
 I=imread(fullfile(direc,nombre));
 imshow(I);
 esqueje=imread(fullfile(direc,nombre));
-imshow(esqueje);
 set(handles.procesar, 'UserData', esqueje);%guardamos la imagen en el componente
 set(handles.procesar,'enable','on');
 set(handles.restaurar,'enable','on');
@@ -113,283 +116,29 @@ function procesar_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 esqueje = get(handles.procesar, 'UserData');%obtenemos la imagen guardadas
 [bwT,bw1] = binarizar(esqueje);
-subplot 121; imshow(bw1);
 bw = im2bw(bw1);
-subplot 122;imshow(bw);
-
-%Cargamos el prop todos los objetos de regionprops
-prop= regionprops(bw,'all');
 
 %Giramos la imagen de ser necesario
-hold on
-pe = prop.Extrema
-p1 = pe(1,1)
-p5 = pe(5,1)
-if (p1 > 700) && (p5 > 700)
-    bw = imrotate(bw,180);
-    hold on
-    imshow(bw);
-end
-
+bw = girarDerecha(bw);
+axes(handles.modificado);
 imshow(bw);
-bw = imrotate(bw,180);
-imwrite(bw,'ima9.bmp');
-
-%extree los datos de la imagen binaria
-prop = regionprops(bw,'all');
-N = length(prop);
-
-%Establece el rectángulo más pequeño que puede contener toda la región, con
-%las propiedades optenida con el metodo anterior
-
-pb = prop.BoundingBox
-rectangle('Position',pb,'EdgeColor','g','LineWidth',2);
-hold on
-
-%crea los puntos de la imagen binaría
-pch = prop.ConvexHull
-plot(pch(:,1),pch(:,2),'LineWidth',2);
-hold on
-
-%pone puntos extremos
-pe = prop.Extrema
-plot(pe(:,1),pe(:,2),'m*','LineWidth',1.5);
-hold on
-
-%pone el centroide
-pc = prop.Centroid
-plot(pc(1),pc(2),'*','MarkerSize',10,'LineWidth',2);
-
-hold on
-
-P1=[pe(6,1) pe(6,2)];P2=[pc(1) pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',2);
-P1=[pe(4,1) pe(4,2)];P2=[pc(1) pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'g','LineWidth',2);
-P1=[pe(2,1) pe(2,2)];P2=[pc(1) pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2);
-
-%creando lineas de eje x
-[fil,col] = size(bw);
-P3=[0,pc(2)]; P4=[col,pc(2)];
-rectax = plot([P3(1) P4(1)],[P3(2) P4(2)],'r','LineWidth',1);
-
-P1=[pc(1),0]; P2=[pc(1),fil];
-rectay = plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',1);
-
-hold on
-v1 = [pe(4,1)-pc(1) 0 0];
-v2 = [pe(4,1)-pc(1) -(pe(4,2)-pc(2)) 0];
-
-[a1, a2] = ab2v(v1, v2);
-
-po = prop.Orientation;
-
-if v2(2)>0
-    bw2 = imrotate(bw, -a2(7));
-else
-     bw2 = imrotate(bw, a2(7));
-
-end
+[x,y,x1,y1] = hojaBase(bw);
+bw = recortarHojas(bw);
 
 
-figure(80)
-subplot 121; imshow(bwT); title('Original');
-subplot 122; imshow(bw2); title('Alineada');
-
-%ahora a sacar ancho y largo
-figure(29); 
-imshow(bw2);
-bw = im2bw(bw2);
-prop = regionprops(bw2,'all');
-N = length(prop);
-
-%Establece el rectángulo más pequeño que puede contener toda la región, con
-%las propiedades optenida con el metodo anterior
-
-pb = prop.BoundingBox
-rectangle('Position',pb,'EdgeColor','g','LineWidth',2);
-hold on
-
-%crea los puntos de la imagen binaría
-pch = prop.ConvexHull
-plot(pch(:,1),pch(:,2),'LineWidth',2);
-hold on
-
-%pone puntos extremos
-pe = prop.Extrema
-plot(pe(:,1),pe(:,2),'m*','LineWidth',1.5);
-hold on
-
-%pone el centroide
-pc = prop.Centroid
-plot(pc(1),pc(2),'*','MarkerSize',10,'LineWidth',2);
-
-hold on
-P1=[pe(6,1) pe(6,2)];P2=[pc(1) pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',2)
-P1=[pe(4,1) pe(4,2)];P2=[pc(1) pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'g','LineWidth',2)
-P1=[pe(2,1) pe(2,2)];P2=[pc(1) pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
-[m,n] = size(bw);
-
-
-%creando lineas de eje x
-P1=[0 pc(2)];P2=[m pc(2)];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
-
-%creando lineas de eje y
-P1=[pc(1) 0];P2=[pc(1) n];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'b','LineWidth',2)
-
-hold on
-v1 = [pe(4,1)-pc(1) 0 0];
-v2 = [pe(4,1)-pc(1) -(pe(4,2)-pc(2)) 0];
-
-[a1, a2] = ab2v(v1, v2);
-
-bw = imrotate(bw,180);
-[fil,col] = size(bw);
-%Creamos un vector cuyo tamaño es el número de colúmnas de la imagen
-vec = zeros(1,col);
-
-%Creamos el histograma para la imágen
-for i=1: col
-    for j =1: fil
-        if (bw(j,i) == 1)
-            vec(i) = vec(i)+1;
-        end
-    end
-end
-figure(1);
-subplot 122; plot(vec);
-subplot 121; imshow(bw); impixelinfo
-hold on
-%Guardamos en sv el tamaño del vector
-sv = size(vec);
-
-%%%%%%%%%%%%%%%%%% HALLAMOS LOS PUNTOS INICIALES DEL TALLO %%%%%%%%%%%%%%%%
-%Hallamos las coordenadas en x para el inicio del tallo
-x=1;
-for i=1:sv(2)
-    if(vec(i) == 0)
-        x=x+1;
-    else
-        break;
-    end
-end
-
-%Hallamos el punto central del inicio del tallo
-centro = vec(1,x)/2;
-
-%Hallamos las coordenadas en y para el inicio del tallo
-y=1;
-for i=1:fil
-    if (bw(i,x) == 1)
-        y = i;
-        break;
-    end
-end
-y = y + centro;
-
-
-%%%%%%%%%%%%%%RECORTAMOS LA IMAGEN EN X+100 Y X-100%%%%%%%%%%%%%%%%%%%%%%%%
-y1 = uint32(y);
-for i=1:(y1-100)
-    for j=1:col
-        if((bw(i,j))==1) 
-            bw(i,j) = 0;
-        end
-    end
-end
-for i=(y1+100):fil
-    for j=1:col
-        if((bw(i,j))==1) 
-            bw(i,j) = 0;
-        end
-    end
-end
-hold on
-
-% %%%%%%%%%%%%%%%%%%% HALLAMOS LOS PUNTOS INICIALES DE LA HOJA %%%%%%%%%%%%
-
-%Creamos de nuevo un vector
-vec1 = zeros(1,col);
-for i=1: col
-    for j =1: fil
-        if (bw(j,i) == 1)
-            vec1(i) = vec1(i)+1;
-        end
-    end
-end
-
-%Hallamos el final del esqueje recortado
-yf=x;
-for i=x:col
-    if(vec1(i) ~= 0)
-        yf=yf+1;
-    else
-        break;
-    end
-end
-
-%Hallamos el valor promedio del grosor (en px) del tallo
-prom = 0;
-for i=x:(x+100)
-    prom = prom + vec(i);
-end
-prom = prom/100;
-
-% %Hallamos la columna donde nace la hoja
-x1 = 0;
-i = x;
-while(vec1(i) < (prom+10))
-	x1 = i;
-    i = i+1;
-end
-
-%Hallamos la fila donde nace la hoja
-centroh = vec1(1,x1)/2;
-y1=1;
-for i=1:fil
-    if (bw(i,x1) == 1)
-        y1 = i;
-        break;
-    end
-end
-y1 = y1 + centroh;
-
-%Trazamos los puntos por las coordenadas encontradas
-
-%Punto inicial del tallo
-hold on
-P1=[x,0]; P2=[x,fil];
-plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',1);
-P3=[0,y]; P4=[col,y];
-plot([P3(1) P4(1)],[P3(2) P4(2)],'r','LineWidth',1);
-
-%Punto inicial de la primer hoja
-hold on
-P5=[x1,0]; P6=[x1,fil];
-plot([P5(1) P6(1)],[P5(2) P6(2)],'m','LineWidth',1);
-P7=[0,y1]; P8=[col,y1];
-plot([P7(1) P8(1)],[P7(2) P8(2)],'m','LineWidth',1);
-
-
-h2 = h2/10;
-area = prop.Area;
-area = area/10;
-esqueLongi = pb(3);
-esqueLongi = esqueLongi/10;
-maxLargo = str2double(get(handles.maxLargo,'String'));
-largoMin = str2double(get(handles.largoMin,'String'));
-distancia= str2double(get(handles.primeraHoja,'String'));
-tipo = deterTipo(maxLargo,largoMin,distancia,esqueLongi,h2);
-set(handles.longiMaxi,'string',esqueLongi);
-set(handles.areaEsque,'string',area);
-set(handles.distaHoja,'string',h2);
-set(handles.tipEsque,'string',tipo);
+% h2 = h2/10;
+% area = prop.Area;
+% area = area/10;
+% esqueLongi = pb(3);
+% esqueLongi = esqueLongi/10;
+% maxLargo = str2double(get(handles.maxLargo,'String'));
+% largoMin = str2double(get(handles.largoMin,'String'));
+% distancia= str2double(get(handles.primeraHoja,'String'));
+% tipo = deterTipo(maxLargo,largoMin,distancia,esqueLongi,h2);
+% set(handles.longiMaxi,'string',esqueLongi);
+% set(handles.areaEsque,'string',area);
+% set(handles.distaHoja,'string',h2);
+% set(handles.tipEsque,'string',tipo);
 
 function maxLargo_Callback(hObject, eventdata, handles)
 % hObject    handle to maxLargo (see GCBO)
@@ -516,9 +265,4 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in clasifica.
-function clasifica_Callback(hObject, eventdata, handles)
-% hObject    handle to clasifica (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 

@@ -7,9 +7,9 @@ bw = bwareaopen(bw,1000);
 prop= regionprops(bw,'all');
 
 hold on
-pe = prop.Extrema
-p1 = pe(1,1)
-p5 = pe(5,1)
+pe = prop.Extrema;
+p1 = pe(1,1);
+p5 = pe(5,1);
 if (p1 > 700) && (p5 > 700)
     bw = imrotate(bw,180);
     hold on
@@ -19,18 +19,18 @@ prop= regionprops(bw,'all');
 N = length(prop);
 
 hold on
-pe = prop.Extrema
+pe = prop.Extrema;
 plot(pe(:,1),pe(:,2),'m*','LineWidth',1.5);
 
-pb = prop.BoundingBox
+pb = prop.BoundingBox;
 rectangle('Position',pb,'EdgeColor','g','LineWidth',2);
 hold on
 
-pch = prop.ConvexHull
+pch = prop.ConvexHull;
 plot(pch(:,1),pch(:,2),'LineWidth',2);
 hold on
 
-pc = prop.Centroid
+pc = prop.Centroid;
 plot(pc(1),pc(2),'*','MarkerSize',10,'LineWidth',2);
 
 hold on
@@ -39,7 +39,7 @@ recta = plot([P1(1) P2(1)],[P1(2) P2(2)],'r','LineWidth',2)
 
  
 hold on
-po = prop.Orientation
+po = prop.Orientation;
 bw2 = imrotate(bw,-po);
 % figure(2);
 % subplot 121; imshow(bw); title('Original');
