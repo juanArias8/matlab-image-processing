@@ -132,7 +132,7 @@ bw = recortarHojas(bw);
 h1 = imdistline(gca,[x y],[y y1]);
 h2 = getDistance(h1);
 h2 = h2/10;    
-setLabelTextFormatter(h1,'%02.0f x10^-1mm');
+setLabelTextFormatter(h1,'%02.0f centi');
 area = areaEs/10;
 esqueLongi = esqueLon/10;
 maxLargo = str2double(get(handles.maxLargo,'String'));

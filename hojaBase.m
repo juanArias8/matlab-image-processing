@@ -15,8 +15,10 @@ for i=1: col
         end
     end
 end
-figure(1);
+figure(7);
+
 subplot 122; plot(vec);
+title('Distancia a primer hoja');
 subplot 121; imshow(bw); impixelinfo
 hold on
 %Guardamos en sv el tamaño del vector
