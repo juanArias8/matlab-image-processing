@@ -1,41 +1,52 @@
-function [b,c]=componentes_color(a);
-[fil,col,cap]=size(a);
+function [b,c]=componentes_color(a)
+%--------------------------------------------------------------------------
+%-- 1. Inicio de la función componentes_color -----------------------------
+%-------------------------------------------------------------------------- 
+[fil,col,cap]=size(a);%se obtienes la longitud de la imagen
 if cap ==1
     b=a;c=a;
     return
 end
-a1=a;
-%%%----Componentes rgb-----%
-a1=normaliza(a1);
-a1=w2linea(a1);
-%----Componente hsv----%
-a2=rgb2hsv(a);
-s=a2(:,:,2);
-a2=normaliza(a2);
-a2=w2linea(a2);
-%-----Componente lab-----%
-cform=makecform('srgb2lab');
-a3=applycform(a,cform);
-lab=a3;
-a3=normaliza(a3);
-a3=w2linea(a3);
-%------Componente cmyk-----%%
-cform=makecform('srgb2cmyk');
-a4=applycform(a,cform);
-a4=normaliza(a4);
-c1=a4(:,:,3);
-a4=a4(:,:,1:3);
-
-a4=w2linea(a4);%%Este debe ir desps de la re acomodacion para que queden solo 3 capas
-
-%%-------Componente lch para esta necesito lab-----%%%
-cform=makecform('lab2lch');
-a5=applycform(lab,cform);
-a5=normaliza(a5);
-a5=w2linea(a5);
-
-c1=normaliza(c1);
-c=c1;
-b=[a1;a2;a3;a4;a5];
-
+%--------------------------------------------------------------------------
+%-- 2. Componentes rgb ----------------------------------------------------
+%-------------------------------------------------------------------------- 
+enRGB=a;%llevamos la imagen original a a1
+enRGB=normaliza(enRGB);%nomrlizamos la imagen de tal forma que los pixeles queden de 1 a 255
+enRGB=w2linea(enRGB);%linealizamos la imagen
+%--------------------------------------------------------------------------
+%-- 3. Componentes hsv ----------------------------------------------------
+%--------------------------------------------------------------------------
+enHSV=rgb2hsv(a);%pasamos nuestra imagen a la componente hsv
+enHSV=normaliza(enHSV);%nomalizamos la imagen de tal forma que los pixeles queden de 1 a 255
+enHSV=w2linea(enHSV);%linealizamos la imagen
+%--------------------------------------------------------------------------
+%-- 4. Componente lab -----------------------------------------------------
+%--------------------------------------------------------------------------
+cform=makecform('srgb2lab');%ahora debemos utilizar un makecform para pasar nuestra imagen a lab
+enLAB=applycform(a,cform);%aplicamos la forma creada anteiormente a nuestra imagen 
+lab=enLAB;%guardamos la componente en lab
+enLAB=normaliza(enLAB);%nomalizamos la imagen de tal forma que los pixeles queden de 1 a 255
+enLAB=w2linea(enLAB);%linealizamos la imagen
+%--------------------------------------------------------------------------
+%-- 4. Componente cmyk ----------------------------------------------------
+%--------------------------------------------------------------------------
+cform=makecform('srgb2cmyk');%ahora debemos utilizar un makecform para pasar nuestra imagen a cmk
+enCMYK=applycform(a,cform);%aplicamos la forma creada anteiormente a nuestra imagen quede en cmyk
+enCMYK=normaliza(enCMYK);%nomalizamos la imagen de tal forma que los pixeles queden de 1 a 255
+capaSelecionada=enCMYK(:,:,3);%Obtenemos la capa que seleccionamos para procesarla
+enCMYK=enCMYK(:,:,1:3);%solo tomamos las 3 primera capas
+enCMYK=w2linea(enCMYK);%linealizamos la imagen
+%--------------------------------------------------------------------------
+%-- 5. Componente lch para esta necesito lab-------------------------------
+%--------------------------------------------------------------------------
+cform=makecform('lab2lch');%para poder obtener la componentes en lch tenemos que tener las componentes en lab
+enLCH=applycform(lab,cform);%pasamos nuestra imagen de la componente lab a la componente lch
+enLCH=normaliza(enLCH);%nomalizamos la imagen de tal forma que los pixeles queden de 1 a 255
+enLCH=w2linea(enLCH);%linealizamos la imagen
+%--------------------------------------------------------------------------
+%-- 6. juntamos todas las capas en una misma imagen------------------------
+%--------------------------------------------------------------------------
+capaSelecionada=normaliza(capaSelecionada);%normalizamos la capa que cogimos para el procesamiento
+c=capaSelecionada;%le asignamos al valor que se va devolver la imagen seleccionada
+b=[enRGB;enHSV;enLAB;enCMYK;enLCH];%le asignamos al valor que se va devolver las componentes
 end

@@ -1,4 +1,0 @@
-function [area,esqueLongi] = sacarProp(imagenBin)
-
-end
-

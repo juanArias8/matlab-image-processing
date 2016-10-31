@@ -22,7 +22,7 @@ function varargout = Gui(varargin)
 
 % Edit the above text to modify the response to help Gui
 
-% Last Modified by GUIDE v2.5 23-Oct-2016 19:38:22
+% Last Modified by GUIDE v2.5 31-Oct-2016 11:50:10
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -132,7 +132,6 @@ bw = recortarHojas(bw);
 h1 = imdistline(gca,[x y],[y y1]);
 h2 = getDistance(h1);
 h2 = h2/10;    
-setLabelTextFormatter(h1,'%02.0f x10^-1mm');
 area = areaEs/10;
 esqueLongi = esqueLon/10;
 maxLargo = str2double(get(handles.maxLargo,'String'));
@@ -268,5 +267,13 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-
+% --- Executes on button press in girar.
+function girar_Callback(hObject, eventdata, handles)
+% hObject    handle to girar (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+esqueje = get(handles.procesar, 'UserData');%obtenemos la imagen guardadas
+esqueje = imrotate(esqueje,180);
+axes(handles.pantalla);
+imshow(esqueje);
+set(handles.procesar, 'UserData', esqueje);%guardamos la imagen en el componente

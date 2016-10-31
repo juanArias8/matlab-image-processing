@@ -1,30 +1,19 @@
 function [area,esqueLongi] = sacarProp(imagenBin)
-    prop = regionprops(imagenBin,'all');
-    N = length(prop);
-
-    %Establece el rectángulo más pequeño que puede contener toda la región, con
-    %las propiedades optenida con el metodo anterior
-
-    pb = prop.BoundingBox
-    rectangle('Position',pb,'EdgeColor','g','LineWidth',2);
-    hold on
-
-    %crea los puntos de la imagen binaría
-    pch = prop.ConvexHull
-    plot(pch(:,1),pch(:,2),'LineWidth',2);
-    hold on
-
-    %pone puntos extremos
-    pe = prop.Extrema
-    plot(pe(:,1),pe(:,2),'m*','LineWidth',1.5);
-    hold on
-
-    %pone el centroide
-    pc = prop.Centroid
-    plot(pc(1),pc(2),'*','MarkerSize',10,'LineWidth',2);
-    
-    %sacamos area
-    area = prop.Area;
-    esqueLongi = pb(3);
+%--------------------------------------------------------------------------
+%-- 1. Inicio de la función sacarProp -------------------------------------
+%-------------------------------------------------------------------------- 
+%--------------------------------------------------------------------------
+%-- 2. Sacamos el el rectangulo que rodeara al esqueje binarizado  --------
+%--------------------------------------------------------------------------
+prop = regionprops(imagenBin,'all');%obtenemos las propiedades de la imagen
+%--------------------------------------------------------------------------
+%-- 3. Sacamos el el rectangulo que rodeara al esqueje binarizado  --------
+%--------------------------------------------------------------------------
+pb = prop.BoundingBox %Establece el rectángulo más pequeño que puede contener toda la región
+%--------------------------------------------------------------------------
+%-- 3. Sacamos el Area de la imagen binarizada ----------------------------
+%--------------------------------------------------------------------------
+area = prop.Area;%obtenemos el area del la imagen
+esqueLongi = pb(3);%obtenemos la longitud del esqueje obtenida del rectangulo
 end
 
